@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Docente · Dashboard</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <link th:href="@{/css/styles.css}" rel="stylesheet">
+</head>
+<body>
+
+<nav class="sp-navbar">
+    <div class="container">
+        <a class="sp-brand" href="#">
+            <span class="brand-dot"><i class="fas fa-chalkboard-user"></i></span>
+            Panel Docente
+        </a>
+        <div class="sp-nav-right">
+            <span class="sp-user-pill">
+                <i class="fas fa-user"></i>
+                <span th:text="${session.usuarioNombre}">Docente</span>
+            </span>
+            <a href="/logout" class="sp-btn-logout">
+                <i class="fas fa-sign-out-alt"></i> Salir
+            </a>
+        </div>
+    </div>
+</nav>
+
+<div class="container sp-page">
+
+    <div class="sp-welcome">
+        <div class="sp-welcome-icon"><i class="fas fa-chalkboard"></i></div>
+        <div>
+            <h4>Bienvenido, <span th:text="${session.usuarioNombre}">Docente</span></h4>
+            <p>Consulta resultados y genera informes de beneficios.</p>
+        </div>
+    </div>
+
+    <div class="sp-card-grid">
+
+        <a href="/docente/buscar-facultad" class="sp-dash-card">
+            <div class="card-icon icon-indigo"><i class="fas fa-building-columns"></i></div>
+            <h5>Buscar por Facultad</h5>
+            <p>Ver resultados de una facultad</p>
+        </a>
+
+        <a href="/docente/buscar-cedula" class="sp-dash-card">
+            <div class="card-icon icon-green"><i class="fas fa-id-card"></i></div>
+            <h5>Buscar por Cédula</h5>
+            <p>Consultar un estudiante específico</p>
+        </a>
+
+        <a href="/docente/informe-beneficios" class="sp-dash-card">
+            <div class="card-icon icon-amber"><i class="fas fa-file-lines"></i></div>
+            <h5>Informe Beneficios</h5>
+            <p>Resolución y beneficios por puntaje</p>
+        </a>
+
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

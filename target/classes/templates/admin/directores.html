@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin · Directores</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <link th:href="@{/css/styles.css}" rel="stylesheet">
+</head>
+<body>
+
+<nav class="sp-navbar">
+    <div class="container">
+        <a class="sp-brand" href="/admin/dashboard">
+            <span class="brand-dot"><i class="fas fa-user-shield"></i></span>
+            Panel Administrador
+        </a>
+        <div class="sp-nav-right">
+            <span class="navbar-page-title"><i class="fas fa-chalkboard-user me-1"></i>Directores</span>
+            <a href="/admin/dashboard" class="sp-btn-back"><i class="fas fa-arrow-left"></i> Volver</a>
+            <a href="/logout" class="sp-btn-logout"><i class="fas fa-sign-out-alt"></i> Salir</a>
+        </div>
+    </div>
+</nav>
+
+<div class="container sp-page">
+    <div class="sp-section-header">
+        <h2><i class="fas fa-chalkboard-user" style="color:var(--accent)"></i> Gestión de Directores</h2>
+        <p>Registra y administra los directores de programa.</p>
+    </div>
+
+    <div class="row g-4">
+        <!-- Formulario -->
+        <div class="col-lg-4">
+            <div class="sp-panel">
+                <div class="sp-panel-header" style="background:linear-gradient(90deg,rgba(99,102,241,.2),transparent)">
+                    <i class="fas fa-plus-circle" style="color:var(--accent)"></i>
+                    <span th:text="${director.id != null} ? 'Editar Director' : 'Nuevo Director'">Nuevo Director</span>
+                </div>
+                <div class="sp-panel-body">
+                    <form th:action="@{/admin/directores/guardar}" th:object="${director}" method="post">
+                        <input type="hidden" th:field="*{id}">
+
+                        <div class="sp-form-group">
+                            <label>Nombre completo</label>
+                            <input type="text" th:field="*{nombre}" class="sp-input" placeholder="Ej: Juan Pérez" required>
+                        </div>
+                        <div class="sp-form-group">
+                            <label>Cédula</label>
+                            <input type="text" th:field="*{cedula}" class="sp-input" placeholder="Número de documento" required>
+                        </div>
+                        <div class="sp-form-group">
+                            <label>Email</label>
+                            <input type="email" th:field="*{email}" class="sp-input" placeholder="correo@dominio.com">
+                        </div>
+                        <div class="sp-form-group">
+                            <label>Teléfono</label>
+                            <input type="text" th:field="*{telefono}" class="sp-input" placeholder="Ej: 3001234567">
+                        </div>
+
+                        <button type="submit" class="sp-btn sp-btn-primary sp-btn-full">
+                            <i class="fas fa-save"></i> Guardar
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <!-- Tabla -->
+        <div class="col-lg-8">
+            <div class="sp-panel">
+                <div class="sp-panel-header">
+                    <i class="fas fa-list" style="color:var(--muted)"></i> Lista de Directores
+                </div>
+                <div class="sp-table-wrap">
+                    <table class="sp-table">
+                        <thead>
+                            <tr>
+                                <th>#</th>
+                                <th>Nombre</th>
+                                <th>Cédula</th>
+                                <th>Email</th>
+                                <th>Teléfono</th>
+                                <th>Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr th:each="d : ${directores}">
+                                <td th:text="${d.id}"></td>
+                                <td th:text="${d.nombre}"></td>
+                                <td><span class="sp-badge sp-badge-muted" th:text="${d.cedula}"></span></td>
+                                <td th:text="${d.email}"></td>
+                                <td th:text="${d.telefono}"></td>
+                                <td>
+                                    <div class="actions">
+                                        <a th:href="@{/admin/directores/editar/{id}(id=${d.id})}"
+                                           class="sp-btn sp-btn-warning sp-btn-sm">
+                                            <i class="fas fa-edit"></i>
+                                        </a>
+                                        <a th:href="@{/admin/directores/eliminar/{id}(id=${d.id})}"
+                                           class="sp-btn sp-btn-danger sp-btn-sm"
+                                           onclick="return confirm('¿Eliminar este director?')">
+                                            <i class="fas fa-trash"></i>
+                                        </a>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr th:if="${#lists.isEmpty(directores)}">
+                                <td colspan="6">
+                                    <div class="sp-empty">
+                                        <i class="fas fa-inbox"></i>
+                                        <p>No hay directores registrados aún.</p>
+                                    </div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
