@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Coordinador · Dashboard</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <link th:href="@{/css/styles.css}" rel="stylesheet">
+</head>
+<body>
+
+<nav class="sp-navbar">
+    <div class="container">
+        <a class="sp-brand" href="#">
+            <span class="brand-dot"><i class="fas fa-users"></i></span>
+            Panel Coordinación
+        </a>
+        <div class="sp-nav-right">
+            <span class="sp-user-pill">
+                <i class="fas fa-user"></i>
+                <span th:text="${session.usuarioNombre}">Coordinador</span>
+            </span>
+            <a href="/logout" class="sp-btn-logout">
+                <i class="fas fa-sign-out-alt"></i> Salir
+            </a>
+        </div>
+    </div>
+</nav>
+
+<div class="container sp-page">
+
+    <div class="sp-welcome">
+        <div class="sp-welcome-icon"><i class="fas fa-users-gear"></i></div>
+        <div>
+            <h4>Bienvenido, <span th:text="${session.usuarioNombre}">Coordinador</span></h4>
+            <p>Gestiona alumnos, pagos e informes de beneficios.</p>
+        </div>
+    </div>
+
+    <div class="sp-card-grid">
+
+        <a href="/coordinador/alumnos" class="sp-dash-card">
+            <div class="card-icon icon-indigo"><i class="fas fa-user-graduate"></i></div>
+            <h5>Gestión de Alumnos</h5>
+            <p>CRUD completo de estudiantes</p>
+        </a>
+
+        <a href="/coordinador/aprobar-pago" class="sp-dash-card">
+            <div class="card-icon icon-green"><i class="fas fa-money-bill-wave"></i></div>
+            <h5>Aprobar Pagos</h5>
+            <p>Validar comprobantes Saber Pro</p>
+        </a>
+
+        <a href="/coordinador/informe-beneficios" class="sp-dash-card">
+            <div class="card-icon icon-cyan"><i class="fas fa-chart-line"></i></div>
+            <h5>Informe Beneficios</h5>
+            <p>Reporte de beneficios por puntaje</p>
+        </a>
+
+        <a href="/coordinador/alumnos" class="sp-dash-card">
+            <div class="card-icon icon-purple"><i class="fas fa-clipboard-list"></i></div>
+            <h5>Registrar Resultados</h5>
+            <p>Ingresar puntajes Saber Pro por alumno</p>
+        </a>
+
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

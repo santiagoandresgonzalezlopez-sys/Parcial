@@ -1,0 +1,318 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sistema Saber Pro · Iniciar sesión</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <style>
+        /* ── Fondo ─────────────────────────────────────────────────────────── */
+        body {
+            margin: 0;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: #0f172a;
+            font-family: 'Segoe UI', system-ui, sans-serif;
+            overflow: hidden;
+        }
+
+        /* Círculos decorativos de fondo */
+        body::before, body::after {
+            content: '';
+            position: fixed;
+            border-radius: 50%;
+            opacity: 0.15;
+            pointer-events: none;
+        }
+        body::before {
+            width: 600px; height: 600px;
+            background: radial-gradient(circle, #6366f1, transparent);
+            top: -150px; left: -150px;
+        }
+        body::after {
+            width: 500px; height: 500px;
+            background: radial-gradient(circle, #06b6d4, transparent);
+            bottom: -120px; right: -120px;
+        }
+
+        /* ── Tarjeta ────────────────────────────────────────────────────────── */
+        .login-wrapper {
+            width: 100%;
+            max-width: 440px;
+            padding: 1rem;
+            z-index: 1;
+        }
+
+        .login-card {
+            background: rgba(255,255,255,0.04);
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 1.5rem;
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            padding: 2.8rem 2.5rem 2.2rem;
+            color: #f1f5f9;
+            box-shadow: 0 25px 50px rgba(0,0,0,0.5);
+        }
+
+        /* ── Encabezado ─────────────────────────────────────────────────────── */
+        .brand-icon {
+            width: 68px; height: 68px;
+            background: linear-gradient(135deg, #6366f1 0%, #06b6d4 100%);
+            border-radius: 1rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 1.25rem;
+            font-size: 1.8rem;
+            color: #fff;
+            box-shadow: 0 8px 20px rgba(99,102,241,0.45);
+        }
+
+        .login-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            text-align: center;
+            margin-bottom: .25rem;
+            letter-spacing: -.3px;
+        }
+
+        .login-subtitle {
+            font-size: .85rem;
+            color: #94a3b8;
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        /* ── Inputs ─────────────────────────────────────────────────────────── */
+        .input-group-custom {
+            position: relative;
+            margin-bottom: 1.1rem;
+        }
+
+        .input-icon {
+            position: absolute;
+            left: 14px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #64748b;
+            font-size: .9rem;
+            pointer-events: none;
+            z-index: 2;
+        }
+
+        .form-control-custom {
+            width: 100%;
+            background: rgba(255,255,255,0.06);
+            border: 1px solid rgba(255,255,255,0.12);
+            border-radius: .75rem;
+            color: #f1f5f9;
+            padding: .75rem 2.8rem .75rem 2.6rem;
+            font-size: .95rem;
+            transition: border-color .2s, box-shadow .2s;
+            outline: none;
+        }
+
+        .form-control-custom::placeholder { color: #475569; }
+        .form-control-custom:focus {
+            border-color: #6366f1;
+            box-shadow: 0 0 0 3px rgba(99,102,241,.2);
+            background: rgba(255,255,255,0.09);
+        }
+
+        /* ── Toggle contraseña ──────────────────────────────────────────────── */
+        .toggle-pw {
+            position: absolute;
+            right: 13px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: none;
+            border: none;
+            color: #64748b;
+            cursor: pointer;
+            font-size: .9rem;
+            padding: 0;
+            z-index: 2;
+            transition: color .2s;
+        }
+        .toggle-pw:hover { color: #94a3b8; }
+
+        /* ── Botón ──────────────────────────────────────────────────────────── */
+        .btn-login {
+            width: 100%;
+            padding: .8rem;
+            border: none;
+            border-radius: .75rem;
+            background: linear-gradient(135deg, #6366f1 0%, #06b6d4 100%);
+            color: #fff;
+            font-weight: 600;
+            font-size: 1rem;
+            cursor: pointer;
+            margin-top: .5rem;
+            transition: opacity .2s, transform .15s;
+            letter-spacing: .2px;
+        }
+        .btn-login:hover   { opacity: .92; transform: translateY(-1px); }
+        .btn-login:active  { transform: translateY(0); }
+
+        /* ── Alerta ─────────────────────────────────────────────────────────── */
+        .alert-custom {
+            background: rgba(239,68,68,.15);
+            border: 1px solid rgba(239,68,68,.35);
+            border-radius: .75rem;
+            color: #fca5a5;
+            padding: .75rem 1rem;
+            font-size: .875rem;
+            display: flex;
+            align-items: center;
+            gap: .5rem;
+            margin-bottom: 1.25rem;
+        }
+
+        /* ── Divisor ────────────────────────────────────────────────────────── */
+        .divider {
+            display: flex;
+            align-items: center;
+            gap: .75rem;
+            margin: 1.5rem 0 1rem;
+            color: #334155;
+            font-size: .78rem;
+        }
+        .divider::before, .divider::after {
+            content: '';
+            flex: 1;
+            height: 1px;
+            background: rgba(255,255,255,0.08);
+        }
+
+        /* ── Credenciales de demo ───────────────────────────────────────────── */
+        .demo-pills {
+            display: flex;
+            flex-direction: column;
+            gap: .45rem;
+        }
+        .demo-pill {
+            background: rgba(255,255,255,0.04);
+            border: 1px solid rgba(255,255,255,0.08);
+            border-radius: .6rem;
+            padding: .45rem .9rem;
+            font-size: .78rem;
+            color: #64748b;
+            cursor: pointer;
+            transition: background .15s, color .15s;
+            text-align: left;
+        }
+        .demo-pill:hover {
+            background: rgba(99,102,241,.18);
+            color: #c7d2fe;
+            border-color: rgba(99,102,241,.35);
+        }
+        .demo-pill strong { color: #94a3b8; }
+
+        /* ── Footer ─────────────────────────────────────────────────────────── */
+        .login-footer {
+            text-align: center;
+            font-size: .75rem;
+            color: #334155;
+            margin-top: 1.5rem;
+        }
+    </style>
+</head>
+<body>
+<div class="login-wrapper">
+    <div class="login-card">
+
+        <!-- Ícono + Título -->
+        <div class="brand-icon">
+            <i class="fas fa-graduation-cap"></i>
+        </div>
+        <h1 class="login-title">Sistema Saber Pro</h1>
+        <p class="login-subtitle">Gestión de Resultados · UTS</p>
+
+        <!-- Alerta de error -->
+        <div th:if="${error}" class="alert-custom">
+            <i class="fas fa-exclamation-circle"></i>
+            <span th:text="${error}"></span>
+        </div>
+
+        <!-- Formulario -->
+        <form action="/login" method="post" id="loginForm">
+
+            <div class="input-group-custom">
+                <i class="fas fa-envelope input-icon"></i>
+                <input type="email"
+                       name="email"
+                       id="email"
+                       class="form-control-custom"
+                       placeholder="correo@dominio.com"
+                       autocomplete="email"
+                       required>
+            </div>
+
+            <div class="input-group-custom">
+                <i class="fas fa-lock input-icon"></i>
+                <input type="password"
+                       name="password"
+                       id="password"
+                       class="form-control-custom"
+                       placeholder="Contraseña"
+                       autocomplete="current-password"
+                       required>
+                <button type="button" class="toggle-pw" onclick="togglePassword()" title="Mostrar / ocultar">
+                    <i class="fas fa-eye" id="eyeIcon"></i>
+                </button>
+            </div>
+
+            <button type="submit" class="btn-login">
+                <i class="fas fa-arrow-right-to-bracket me-2"></i>Iniciar sesión
+            </button>
+        </form>
+
+        <!-- Credenciales rápidas -->
+        <div class="divider">accesos de prueba</div>
+        <div class="demo-pills">
+            <button class="demo-pill" onclick="fillCredentials('admin@sistema.edu.co','admin123')">
+                <i class="fas fa-user-shield me-2"></i>
+                <strong>Administrador</strong> · admin@sistema.edu.co / admin123
+            </button>
+            <button class="demo-pill" onclick="fillCredentials('coordinador@sistema.edu.co','coord123')">
+                <i class="fas fa-users me-2"></i>
+                <strong>Coordinador</strong> · coordinador@sistema.edu.co / coord123
+            </button>
+            <button class="demo-pill" onclick="fillCredentials('','')">
+                <i class="fas fa-chalkboard-user me-2"></i>
+                <strong>Docente / Estudiante</strong> · email registrado / cédula
+            </button>
+        </div>
+
+    </div>
+
+    <p class="login-footer">
+        <i class="fas fa-shield-halved me-1"></i>
+        Las credenciales de docentes y estudiantes se asignan automáticamente al crearlos.
+    </p>
+</div>
+
+<script>
+    function togglePassword() {
+        const pw  = document.getElementById('password');
+        const eye = document.getElementById('eyeIcon');
+        if (pw.type === 'password') {
+            pw.type = 'text';
+            eye.classList.replace('fa-eye', 'fa-eye-slash');
+        } else {
+            pw.type = 'password';
+            eye.classList.replace('fa-eye-slash', 'fa-eye');
+        }
+    }
+
+    function fillCredentials(email, pw) {
+        document.getElementById('email').value    = email;
+        document.getElementById('password').value = pw;
+        document.getElementById('email').focus();
+    }
+</script>
+</body>
+</html>

@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin · Usuarios</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <link th:href="@{/css/styles.css}" rel="stylesheet">
+</head>
+<body>
+
+<nav class="sp-navbar">
+    <div class="container">
+        <a class="sp-brand" href="/admin/dashboard">
+            <span class="brand-dot"><i class="fas fa-user-shield"></i></span>
+            Panel Administrador
+        </a>
+        <div class="sp-nav-right">
+            <span class="navbar-page-title"><i class="fas fa-users-cog me-1"></i>Usuarios</span>
+            <a href="/admin/dashboard" class="sp-btn-back"><i class="fas fa-arrow-left"></i> Volver</a>
+            <a href="/logout" class="sp-btn-logout"><i class="fas fa-sign-out-alt"></i> Salir</a>
+        </div>
+    </div>
+</nav>
+
+<div class="container sp-page">
+    <div class="sp-section-header">
+        <h2><i class="fas fa-users-cog" style="color:#f87171"></i> Gestión de Usuarios del Sistema</h2>
+        <p>Administra accesos, roles y contraseñas. Los docentes y estudiantes se crean automáticamente.</p>
+    </div>
+
+    <div class="row g-4">
+        <!-- Formulario -->
+        <div class="col-lg-4">
+            <div class="sp-panel">
+                <div class="sp-panel-header" style="background:linear-gradient(90deg,rgba(239,68,68,.15),transparent)">
+                    <i class="fas fa-user-plus" style="color:#f87171"></i>
+                    <span th:text="${usuario.id != null} ? 'Editar Usuario' : 'Nuevo Usuario'">Nuevo Usuario</span>
+                </div>
+                <div class="sp-panel-body">
+                    <form th:action="@{/admin/usuarios/guardar}" th:object="${usuario}" method="post">
+                        <input type="hidden" th:field="*{id}">
+
+                        <div class="sp-form-group">
+                            <label>Nombre</label>
+                            <input type="text" th:field="*{nombre}" class="sp-input" placeholder="Nombre completo" required>
+                        </div>
+                        <div class="sp-form-group">
+                            <label>Email <small style="color:var(--muted)">(usuario de acceso)</small></label>
+                            <input type="email" th:field="*{email}" class="sp-input" placeholder="correo@dominio.com" required>
+                        </div>
+                        <div class="sp-form-group">
+                            <label>Contraseña <small style="color:var(--muted)">(vacío = usar cédula)</small></label>
+                            <input type="text" th:field="*{password}" class="sp-input" placeholder="Dejar vacío para usar cédula">
+                        </div>
+                        <div class="sp-form-group">
+                            <label>Cédula</label>
+                            <input type="text" th:field="*{cedula}" class="sp-input" placeholder="Número de documento">
+                        </div>
+                        <div class="sp-form-group">
+                            <label>Rol</label>
+                            <select th:field="*{rol}" class="sp-select" required>
+                                <option value="">Seleccione un rol...</option>
+                                <option th:each="r : ${roles}" th:value="${r}" th:text="${r}"></option>
+                            </select>
+                        </div>
+
+                        <button type="submit" class="sp-btn sp-btn-primary sp-btn-full">
+                            <i class="fas fa-save"></i> Guardar Usuario
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <!-- Tabla -->
+        <div class="col-lg-8">
+            <div class="sp-panel">
+                <div class="sp-panel-header">
+                    <i class="fas fa-list" style="color:var(--muted)"></i> Usuarios Registrados
+                </div>
+                <div class="sp-table-wrap">
+                    <table class="sp-table">
+                        <thead>
+                            <tr>
+                                <th>Nombre</th>
+                                <th>Email</th>
+                                <th>Rol</th>
+                                <th>Estado</th>
+                                <th>Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr th:each="u : ${usuarios}">
+                                <td th:text="${u.nombre}"></td>
+                                <td style="font-size:.82rem;" th:text="${u.email}"></td>
+                                <td>
+                                    <span class="sp-badge"
+                                          th:classappend="${u.rol.name() == 'ADMIN'}       ? 'sp-badge-danger'  :
+                                                          (${u.rol.name() == 'COORDINADOR'} ? 'sp-badge-muted'   :
+                                                          (${u.rol.name() == 'DOCENTE'}     ? 'sp-badge-info'    : 'sp-badge-success'))"
+                                          th:text="${u.rol}">
+                                    </span>
+                                </td>
+                                <td>
+                                    <span th:if="${u.activo}"    class="sp-badge sp-badge-success"><i class="fas fa-circle"></i> Activo</span>
+                                    <span th:unless="${u.activo}" class="sp-badge sp-badge-danger"><i class="fas fa-circle"></i> Inactivo</span>
+                                </td>
+                                <td>
+                                    <div class="actions">
+                                        <a th:href="@{/admin/usuarios/editar/{id}(id=${u.id})}"
+                                           class="sp-btn sp-btn-warning sp-btn-sm">
+                                            <i class="fas fa-edit"></i>
+                                        </a>
+                                        <form th:action="@{/admin/usuarios/toggle/{id}(id=${u.id})}"
+                                              method="post" style="display:inline">
+                                            <button type="submit" class="sp-btn sp-btn-sm"
+                                                    th:classappend="${u.activo} ? 'sp-btn-muted' : 'sp-btn-success'"
+                                                    th:title="${u.activo} ? 'Desactivar' : 'Activar'">
+                                                <i class="fas" th:classappend="${u.activo} ? 'fa-ban' : 'fa-check'"></i>
+                                            </button>
+                                        </form>
+                                        <a th:href="@{/admin/usuarios/eliminar/{id}(id=${u.id})}"
+                                           class="sp-btn sp-btn-danger sp-btn-sm"
+                                           onclick="return confirm('¿Eliminar este usuario?')">
+                                            <i class="fas fa-trash"></i>
+                                        </a>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr th:if="${#lists.isEmpty(usuarios)}">
+                                <td colspan="5">
+                                    <div class="sp-empty">
+                                        <i class="fas fa-inbox"></i>
+                                        <p>No hay usuarios registrados.</p>
+                                    </div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

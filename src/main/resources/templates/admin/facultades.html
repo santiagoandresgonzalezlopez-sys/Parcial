@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin · Facultades</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <link th:href="@{/css/styles.css}" rel="stylesheet">
+</head>
+<body>
+
+<nav class="sp-navbar">
+    <div class="container">
+        <a class="sp-brand" href="/admin/dashboard">
+            <span class="brand-dot"><i class="fas fa-user-shield"></i></span>
+            Panel Administrador
+        </a>
+        <div class="sp-nav-right">
+            <span class="navbar-page-title"><i class="fas fa-building-columns me-1"></i>Facultades</span>
+            <a href="/admin/dashboard" class="sp-btn-back"><i class="fas fa-arrow-left"></i> Volver</a>
+            <a href="/logout" class="sp-btn-logout"><i class="fas fa-sign-out-alt"></i> Salir</a>
+        </div>
+    </div>
+</nav>
+
+<div class="container sp-page">
+    <div class="sp-section-header">
+        <h2><i class="fas fa-building-columns" style="color:#22d3ee"></i> Gestión de Facultades</h2>
+        <p>Administra las facultades e institutos de la institución.</p>
+    </div>
+
+    <div class="row g-4">
+        <!-- Formulario -->
+        <div class="col-lg-4">
+            <div class="sp-panel">
+                <div class="sp-panel-header" style="background:linear-gradient(90deg,rgba(6,182,212,.15),transparent)">
+                    <i class="fas fa-plus-circle" style="color:#22d3ee"></i>
+                    <span th:text="${facultad.id != null} ? 'Editar Facultad' : 'Nueva Facultad'">Nueva Facultad</span>
+                </div>
+                <div class="sp-panel-body">
+                    <form th:action="@{/admin/facultades/guardar}" th:object="${facultad}" method="post">
+                        <input type="hidden" th:field="*{id}">
+
+                        <div class="sp-form-group">
+                            <label>Nombre de la facultad</label>
+                            <input type="text" th:field="*{nombre}" class="sp-input" placeholder="Ej: Facultad de Ingeniería" required>
+                        </div>
+                        <div class="sp-form-group">
+                            <label>Decano</label>
+                            <input type="text" th:field="*{decano}" class="sp-input" placeholder="Nombre del decano">
+                        </div>
+                        <div class="sp-form-group">
+                            <label>Descripción</label>
+                            <textarea th:field="*{descripcion}" class="sp-textarea" rows="3"
+                                      placeholder="Descripción breve..."></textarea>
+                        </div>
+
+                        <button type="submit" class="sp-btn sp-btn-primary sp-btn-full">
+                            <i class="fas fa-save"></i> Guardar
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <!-- Tabla -->
+        <div class="col-lg-8">
+            <div class="sp-panel">
+                <div class="sp-panel-header">
+                    <i class="fas fa-list" style="color:var(--muted)"></i> Lista de Facultades
+                </div>
+                <div class="sp-table-wrap">
+                    <table class="sp-table">
+                        <thead>
+                            <tr>
+                                <th>#</th>
+                                <th>Nombre</th>
+                                <th>Decano</th>
+                                <th>Descripción</th>
+                                <th>Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr th:each="f : ${facultades}">
+                                <td th:text="${f.id}"></td>
+                                <td><strong th:text="${f.nombre}"></strong></td>
+                                <td th:text="${f.decano}"></td>
+                                <td style="max-width:200px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;"
+                                    th:text="${f.descripcion}"></td>
+                                <td>
+                                    <div class="actions">
+                                        <a th:href="@{/admin/facultades/editar/{id}(id=${f.id})}"
+                                           class="sp-btn sp-btn-warning sp-btn-sm">
+                                            <i class="fas fa-edit"></i>
+                                        </a>
+                                        <a th:href="@{/admin/facultades/eliminar/{id}(id=${f.id})}"
+                                           class="sp-btn sp-btn-danger sp-btn-sm"
+                                           onclick="return confirm('¿Eliminar esta facultad?')">
+                                            <i class="fas fa-trash"></i>
+                                        </a>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr th:if="${#lists.isEmpty(facultades)}">
+                                <td colspan="5">
+                                    <div class="sp-empty">
+                                        <i class="fas fa-inbox"></i>
+                                        <p>No hay facultades registradas aún.</p>
+                                    </div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

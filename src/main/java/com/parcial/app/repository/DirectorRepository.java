@@ -1,0 +1,10 @@
+package com.parcial.app.repository;
+
+import com.parcial.app.model.Director;
+import org.springframework.data.jpa.repository.JpaRepository;
+import java.util.Optional;
+
+public interface DirectorRepository extends JpaRepository<Director, Long> {
+    Optional<Director> findByCedula(String cedula);
+    boolean existsByCedula(String cedula);
+}
